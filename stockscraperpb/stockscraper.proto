@@ -1,0 +1,25 @@
+syntax="proto3";
+
+package stockscraper;
+option go_package="stockscraperpb";
+
+message FetchRequest {
+    string name=1;
+}
+
+message FetchResponse {
+    float price=1;
+}
+
+message MonitorRequest {
+    string name=1;
+}
+
+message MonitorResponse {
+    float price=1;
+}
+
+service stockscraper {
+    rpc Fetch(FetchRequest) returns (FetchResponse) {};
+    rpc Monitor(MonitorRequest) returns (stream MonitorResponse) {};
+}

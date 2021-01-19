@@ -13,6 +13,7 @@ message FetchResponse {
 
 message MonitorRequest {
     string name=1;
+    int32 duration=2;
 }
 
 message MonitorResponse {

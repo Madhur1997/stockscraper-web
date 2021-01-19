@@ -1,4 +1,4 @@
-module github.com/Madhur1997/stock-webapp
+module stock-webapp
 
 go 1.13
 
@@ -10,6 +10,7 @@ require (
 	github.com/gin-gonic/gin v1.6.3
 	github.com/golang/protobuf v1.4.2
 	github.com/sirupsen/logrus v1.7.0
+	github.com/soheilhy/cmux v0.1.4 // indirect
 	google.golang.org/grpc v1.34.0
 	google.golang.org/protobuf v1.25.0
 )

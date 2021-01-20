@@ -36,12 +36,14 @@ func (*StockScraper) Fetch(ctx context.Context, req *stk.FetchRequest) (*stk.Fet
 
 	select {
 	case val := <-result:
-		retVal, _ := strconv.ParseFloat(val, 32)
+		retVal, _ := strconv.ParseFloat(val, 64)
 		res := &stk.FetchResponse{
-			Price: float32(retVal),
+			Price: retVal,
 		}
 		if val != "" {
-			return res, nil
+			return &stk.FetchResponse{
+				Price: res,
+			}, nil
 		}
 		return nil, status.Errorf(codes.Internal, fmt.Sprintf("Internal error"))
 	}
@@ -57,7 +59,7 @@ func (*StockScraper) Monitor(req *stk.MonitorRequest, stream stk.Stockscraper_Mo
 	}).Info("Monitor Stock")
 
 	minTicker := time.NewTicker(time.Minute)
-	durationTicker := time.NewTicker(time.Minute * time.Duration(duration))
+	durationTicker := time.NewTicker(time.Minute * duration)
 
 	for {
 		select {
@@ -73,9 +75,9 @@ func (*StockScraper) Monitor(req *stk.MonitorRequest, stream stk.Stockscraper_Mo
 			case val := <-result:
 				if val != "" {
 					// Valid value received, send it to react client.
-					retVal, _ := strconv.ParseFloat(val, 32)
-					res := &stk.MonitorResponse{
-						Price: float32(retVal),
+					retVal, _ := strconv.ParseFloat(val, 64)
+					res := &stk.FetchResponse{
+						Price: retVal,
 					}
 					stream.Send(res)
 				} else {

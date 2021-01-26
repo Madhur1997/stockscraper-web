@@ -9,6 +9,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// Utility function to scrap the stock price.
 func FetchPrice(q string, res chan<- string) {
 
 	log.WithFields(log.Fields{

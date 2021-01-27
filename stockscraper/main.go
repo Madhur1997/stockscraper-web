@@ -3,7 +3,7 @@ package main
 import (
 	"net"
 
-	stk "stock-webapp/stockscraper/stockscraperpb"
+	stk "stockscraper/stockscraperpb"
 
 	log "github.com/sirupsen/logrus"
 	grpc "google.golang.org/grpc"

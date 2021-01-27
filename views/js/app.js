@@ -2,6 +2,25 @@ const AUTH0_DOMAIN = "dev-3ulgmk2c.us.auth0.com"
 const AUTH0_CALLBACK_URL = "http://localhost:3000"
 const AUTH0_CLIENT_ID = "tDIpSYooIrPeTODfO14ythGLR4OnOElR"
 const AUTH0_API_AUDIENCE = "localhost:3000/"
+// Request to the envoy proxy
+var client = new StockscraperClient('http://localhost:3002')
+var request = new FetchRequest()
+
+request.setName("ashok leyland")
+
+client.Fetch(request, {}, (err, response) => {
+	    console.log(err)
+	    console.log("Stock price: ", response.getPrice())
+})
+
+class LoggedIn extends React.Component {
+    render() {
+        return (
+            <div>LoggedIn</div>
+        )
+    }
+}
+
 class App extends React.Component {
     parseHash() {
         this.auth0 = new auth0.WebAuth({
@@ -92,14 +111,6 @@ class Home extends React.Component {
                     </div>
                 </div>
             </div>
-        )
-    }
-}
-
-class LoggedIn extends React.Component {
-    render() {
-        return (
-            <div>LoggedIn</div>
         )
     }
 }

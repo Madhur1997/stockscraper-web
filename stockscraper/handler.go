@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	stk "stock-webapp/stockscraper/stockscraperpb"
+	stk "stockscraper/stockscraperpb"
 
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc/codes"

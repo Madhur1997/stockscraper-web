@@ -1,0 +1,10 @@
+FROM golang:alpine
+
+RUN cd /root && mkdir stockscraper
+WORKDIR /root/stockscraper
+COPY . .
+
+EXPOSE 3001
+
+CMD go run .
+

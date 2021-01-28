@@ -1,10 +1,9 @@
 import { StockscraperClient } from "./stockscraper_grpc_web_pb"
 import { FetchRequest, MonitorRequest } from "./stockscraper_pb"
+import Home from "./Components/HomeComponent.js"
+import LoggedIn from "./Components/LoggedInComponent.js"
+import { AUTH0_DOMAIN, AUTH0_CLIENT_ID } from "./authVars.js"
 
-const AUTH0_DOMAIN = "dev-3ulgmk2c.us.auth0.com"
-const AUTH0_CALLBACK_URL = "http://localhost:3000"
-const AUTH0_CLIENT_ID = "tDIpSYooIrPeTODfO14ythGLR4OnOElR"
-const AUTH0_API_AUDIENCE = "localhost:3000/"
 // Request to the envoy proxy
 var client = new StockscraperClient('http://localhost:3002')
 var request = new FetchRequest()
@@ -14,46 +13,6 @@ request.setName("ashok leyland")
 client.fetch(request, {}, (err, response) => {
     console.log("Stock price: ", response.getPrice())
 })
-
-class LoggedIn extends React.Component {
-    render() {
-        return (
-            <div>LoggedIn</div>
-        )
-    }
-}
-
-class Home extends React.Component {
-    constructor() {
-        super()
-        this.authenticate = this.authenticate.bind(this)
-    }
-    authenticate() {
-        this.WebAuth = new auth0.WebAuth({
-            domain: AUTH0_DOMAIN,
-            clientID: AUTH0_CLIENT_ID,
-            scope: "openid profile",
-            audience: AUTH0_API_AUDIENCE,
-            responseType: "token id_token",
-            redirectUri: AUTH0_CALLBACK_URL
-        })
-        this.WebAuth.authorize()
-    }
-    render() {
-        return (
-            <div className="container">
-                <div className="row">
-                    <div className="col-xs-8 col-xs-offset-2 jumbotron text-center">
-                        <h1>Stock Manager</h1>
-                        <p>Your very own stock manager</p>
-                        <p>Sign in to get access</p>
-                        <a onClick={this.authenticate} className="btn btn-primary btn-lg btn-login btn-block">Sign In</a>
-                    </div>
-                </div>
-            </div>
-        )
-    }
-}
 
 class App extends React.Component {
     parseHash() {

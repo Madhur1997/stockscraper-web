@@ -1,6 +1,8 @@
-# stockscraper-web
+# stockscraper-web:
 Web version of stockscraper built in Go, React JS, gRPC web.
 
+# Requirements:
+Docker must be installed on the system.
 
 # To run:
 1. git clone https://github.com/Madhur1997/stockscraper-web.git

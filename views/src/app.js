@@ -1,7 +1,6 @@
 import { StockscraperClient } from "./stockscraper_grpc_web_pb"
 import { FetchRequest, MonitorRequest } from "./stockscraper_pb"
 
-
 const AUTH0_DOMAIN = "dev-3ulgmk2c.us.auth0.com"
 const AUTH0_CALLBACK_URL = "http://localhost:3000"
 const AUTH0_CLIENT_ID = "tDIpSYooIrPeTODfO14ythGLR4OnOElR"
@@ -23,7 +22,6 @@ class LoggedIn extends React.Component {
         )
     }
 }
-
 
 class Home extends React.Component {
     constructor() {
@@ -118,3 +116,5 @@ class App extends React.Component {
         this.setLogin()
     }
 }
+
+export default App

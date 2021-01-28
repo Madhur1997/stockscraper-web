@@ -54,7 +54,7 @@ func main() {
 	jwtMiddleWare = jwtMiddleware
 
 	router := gin.Default()
-	router.Use(static.Serve("/", static.LocalFile("./views/src", true)))
+	router.Use(static.Serve("/", static.LocalFile("./views", true)))
 	router.Run(":3000")
 }
 

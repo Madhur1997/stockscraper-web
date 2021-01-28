@@ -1,0 +1,35 @@
+#!/bin/bash
+
+set -eu
+
+build_images() {
+    docker build -t envoy-stockscraper . -f Dockerfile.envoy-proxy
+    cd stockscraper
+    docker build -t stockscraper-img . -f Dockerfile.stockscraper-srv
+}
+
+start_containers() {
+    docker run -d --rm  -p 3001:3001 --name stockscraper-srv stockscraper-img
+    docker run -d --rm  -p 3002:3002 --link stockscraper-srv:stockscraper-srv --name envoy-stockscraper-ctr envoy-stockscraper
+}
+
+clean_images() {
+    docker rmi -f envoy-stockscraper || echo "envoy stockscraper image doesn't exist, ignoring clear."
+    docker rmi -f stockscraper-img || echo "stockscraper image doesn't exist, ignoring clear."
+}
+
+clean_containers() {
+    docker rm -f envoy-stockscraper-ctr || echo "envoy proxy container doesn't exist, ignoring clear."
+    docker rm -f stockscraper-srv || echo "stockscraper service container doesn't exist, ignoring clear."
+}
+
+start_http_server() {
+    go run main.go
+}
+
+stop_http_server() {
+    ps -ef | grep "\/exe\/main" | awk '{print $2}' | xargs kill -9
+}
+
+#Single argument is passed: name of the function.
+"$1"

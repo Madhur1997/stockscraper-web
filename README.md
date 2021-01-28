@@ -8,6 +8,6 @@ Docker must be installed on the system.
 1. git clone https://github.com/Madhur1997/stockscraper-web.git
 2. From the repo's root directory, run:
    `make build`
-   `make run`
+   `make run`.
 
 3. `make clean` to stop and clean the servers.

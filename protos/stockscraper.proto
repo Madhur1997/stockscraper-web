@@ -20,7 +20,7 @@ message MonitorResponse {
     float price=1;
 }
 
-service stockscraper {
+service Stockscraper {
     rpc Fetch(FetchRequest) returns (FetchResponse) {};
     rpc Monitor(MonitorRequest) returns (stream MonitorResponse) {};
 }

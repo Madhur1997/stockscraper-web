@@ -51,4 +51,4 @@ static_resources:
                 address:
                   socket_address:
                     address: stockscraper-srv
-                    port_value: 3003
+                    port_value: 3001

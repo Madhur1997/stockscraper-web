@@ -241,7 +241,7 @@ var file_stockscraper_proto_rawDesc = []byte{
 	0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x08, 0x64, 0x75, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x22,
 	0x27, 0x0a, 0x0f, 0x4d, 0x6f, 0x6e, 0x69, 0x74, 0x6f, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
 	0x73, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x70, 0x72, 0x69, 0x63, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x02, 0x52, 0x05, 0x70, 0x72, 0x69, 0x63, 0x65, 0x32, 0x9e, 0x01, 0x0a, 0x0c, 0x73, 0x74, 0x6f,
+	0x02, 0x52, 0x05, 0x70, 0x72, 0x69, 0x63, 0x65, 0x32, 0x9e, 0x01, 0x0a, 0x0c, 0x53, 0x74, 0x6f,
 	0x63, 0x6b, 0x73, 0x63, 0x72, 0x61, 0x70, 0x65, 0x72, 0x12, 0x42, 0x0a, 0x05, 0x46, 0x65, 0x74,
 	0x63, 0x68, 0x12, 0x1a, 0x2e, 0x73, 0x74, 0x6f, 0x63, 0x6b, 0x73, 0x63, 0x72, 0x61, 0x70, 0x65,
 	0x72, 0x2e, 0x46, 0x65, 0x74, 0x63, 0x68, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1b,
@@ -276,10 +276,10 @@ var file_stockscraper_proto_goTypes = []interface{}{
 	(*MonitorResponse)(nil), // 3: stockscraper.MonitorResponse
 }
 var file_stockscraper_proto_depIdxs = []int32{
-	0, // 0: stockscraper.stockscraper.Fetch:input_type -> stockscraper.FetchRequest
-	2, // 1: stockscraper.stockscraper.Monitor:input_type -> stockscraper.MonitorRequest
-	1, // 2: stockscraper.stockscraper.Fetch:output_type -> stockscraper.FetchResponse
-	3, // 3: stockscraper.stockscraper.Monitor:output_type -> stockscraper.MonitorResponse
+	0, // 0: stockscraper.Stockscraper.Fetch:input_type -> stockscraper.FetchRequest
+	2, // 1: stockscraper.Stockscraper.Monitor:input_type -> stockscraper.MonitorRequest
+	1, // 2: stockscraper.Stockscraper.Fetch:output_type -> stockscraper.FetchResponse
+	3, // 3: stockscraper.Stockscraper.Monitor:output_type -> stockscraper.MonitorResponse
 	2, // [2:4] is the sub-list for method output_type
 	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -388,7 +388,7 @@ func NewStockscraperClient(cc grpc.ClientConnInterface) StockscraperClient {
 
 func (c *stockscraperClient) Fetch(ctx context.Context, in *FetchRequest, opts ...grpc.CallOption) (*FetchResponse, error) {
 	out := new(FetchResponse)
-	err := c.cc.Invoke(ctx, "/stockscraper.stockscraper/Fetch", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/stockscraper.Stockscraper/Fetch", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -396,7 +396,7 @@ func (c *stockscraperClient) Fetch(ctx context.Context, in *FetchRequest, opts .
 }
 
 func (c *stockscraperClient) Monitor(ctx context.Context, in *MonitorRequest, opts ...grpc.CallOption) (Stockscraper_MonitorClient, error) {
-	stream, err := c.cc.NewStream(ctx, &_Stockscraper_serviceDesc.Streams[0], "/stockscraper.stockscraper/Monitor", opts...)
+	stream, err := c.cc.NewStream(ctx, &_Stockscraper_serviceDesc.Streams[0], "/stockscraper.Stockscraper/Monitor", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -458,7 +458,7 @@ func _Stockscraper_Fetch_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/stockscraper.stockscraper/Fetch",
+		FullMethod: "/stockscraper.Stockscraper/Fetch",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(StockscraperServer).Fetch(ctx, req.(*FetchRequest))
@@ -488,7 +488,7 @@ func (x *stockscraperMonitorServer) Send(m *MonitorResponse) error {
 }
 
 var _Stockscraper_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "stockscraper.stockscraper",
+	ServiceName: "stockscraper.Stockscraper",
 	HandlerType: (*StockscraperServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

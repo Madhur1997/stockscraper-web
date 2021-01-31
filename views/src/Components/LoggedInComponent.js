@@ -19,10 +19,15 @@ function monitorRequest(stockName, duration) {
     request.setName(stockName)
     request.setDuration(duration)
 
-    let stream = client.monitor(request, {})
+    let dl = new Date()
+    dl.setSeconds(dl.getSeconds() + 900)
+    let stream = client.monitor(request, { deadline: dl.getTime() })
 
     stream.on('data', function (response) {
         console.log("Stock price : ", response.getPrice())
+    })
+    stream.on('err', function (err) {
+        console.log(err)
     })
 }
 

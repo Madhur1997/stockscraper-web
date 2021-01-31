@@ -4,8 +4,7 @@ set -eu
 
 build_images() {
     docker build -t envoy-stockscraper . -f Dockerfile.envoy-proxy
-    cd stockscraper
-    docker build -t stockscraper-img . -f Dockerfile.stockscraper-srv
+    docker build -t stockscraper-img ./stockscraper -f ./stockscraper/Dockerfile.stockscraper-srv
 }
 
 start_containers() {

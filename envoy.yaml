@@ -25,7 +25,7 @@ static_resources:
                 route:
                   cluster: stockscraper_service
                   max_stream_duration:
-                    grpc_timeout_header_max: 0s
+                    grpc_timeout_header_max: 0
               cors:
                 allow_origin_string_match:
                 - prefix: "*"
@@ -39,7 +39,7 @@ static_resources:
           - name: envoy.filters.http.router
   clusters:
   - name: stockscraper_service
-    connect_timeout: 0.25s
+    connect_timeout: 0
     type: logical_dns
     http2_protocol_options: {}
     lb_policy: round_robin

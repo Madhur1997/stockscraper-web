@@ -9,7 +9,7 @@ build: ## Only build images
 	./script build_images
 
 .PHONY: clean
-clean: ## Clear out the stale containers and images.
+clean: ## Clear out the stale containers and images
 	./script clean_containers
 	./script clean_images
 	./script stop_http_server

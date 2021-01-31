@@ -1,18 +1,6 @@
-import { StockscraperClient } from "./stockscraper_grpc_web_pb"
-import { FetchRequest, MonitorRequest } from "./stockscraper_pb"
 import Home from "./Components/HomeComponent.js"
 import LoggedIn from "./Components/LoggedInComponent.js"
 import { AUTH0_DOMAIN, AUTH0_CLIENT_ID } from "./authVars.js"
-
-// Request to the envoy proxy
-var client = new StockscraperClient('http://localhost:3002')
-var request = new FetchRequest()
-
-request.setName("ashok leyland")
-
-client.fetch(request, {}, (err, response) => {
-    console.log("Stock price: ", response.getPrice())
-})
 
 class App extends React.Component {
     parseHash() {

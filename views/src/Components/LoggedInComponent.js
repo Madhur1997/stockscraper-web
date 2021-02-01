@@ -1,7 +1,7 @@
 import React from "react"
 import { StockscraperClient } from "../stockscraper_grpc_web_pb"
 import { FetchRequest, MonitorRequest } from "../stockscraper_pb"
-import Stockcard from "./StockcardComponent"
+import { FetchCard, MonitorCard } from "./StockcardComponent"
 
 // Request to the envoy proxy
 var client = new StockscraperClient('http://localhost:3002')
@@ -12,33 +12,54 @@ class LoggedIn extends React.Component {
         this.state = {
             fetchInput: "",
             monitorInput: "",
-            monitoredStocks: {
-                "ashok leyland": [500]
-            },
+            fetchStocks: [
+                {
+                    "motherson sumi": {
+                        stockPrice: 153.5,
+                    }
+                }
+            ],
+            monitoredStocks: {},
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleKeyUp = this.handleKeyUp.bind(this)
         this.fetchRequest = this.fetchRequest.bind(this)
         this.monitorRequest = this.monitorRequest.bind(this)
-        this.streamOutput = this.streamOutput.bind(this)
+        this.fetchCallback = this.fetchCallback.bind(this)
+        this.monitorCallback = this.monitorCallback.bind(this)
+    }
+
+    fetchCallback(stockName, price) {
+        console.log("Stock name, price: ", stockName, price)
+
+        let arr = this.state.fetchStocks
+        arr.push({
+            [stockName]: {
+                stockPrice: price
+            }
+        })
+        this.setState({
+            fetchStocks: arr
+        })
     }
 
     fetchRequest(stockName) {
         let request = new FetchRequest()
         request.setName(stockName)
 
+        const fn = this.fetchCallback
         client.fetch(request, {}, (err, response) => {
-            console.log("Stock name, price: ", stockName, response.getPrice())
+            // Handle error
+            let price = response.getPrice()
+            fn(stockName, price)
         })
     }
 
-    streamOutput(stockName, price) {
+    monitorCallback(stockName, price) {
         console.log("Stock name, price : ", stockName, price)
+
         let obj = this.state.monitoredStocks
-        for (let name in obj) {
-            console.log(name)
-        }
-        console.log(obj.hasOwnProperty(stockName))
+        //console.log(obj.hasOwnProperty(stockName))
         if (obj.hasOwnProperty(stockName) == false) {
             obj[stockName] = []
         }
@@ -54,7 +75,7 @@ class LoggedIn extends React.Component {
         request.setDuration(duration)
 
         let stream = client.monitor(request, {})
-        const fn = this.streamOutput
+        const fn = this.monitorCallback
 
         stream.on('data', function (response) {
             let price = response.getPrice()
@@ -71,6 +92,7 @@ class LoggedIn extends React.Component {
         localStorage.removeItem("profile")
         location.reload()
     }
+
     componentDidMount() {
     }
 
@@ -99,14 +121,23 @@ class LoggedIn extends React.Component {
     }
 
     render() {
+        let fetchCardList = []
+        for (let idx = this.state.fetchStocks.length - 1; idx >= 0; idx--) {
+            let obj = this.state.fetchStocks[idx]
+            for (let stockName in obj) {
+                console.log(stockName)
+                console.log(obj[stockName].stockPrice)
+                fetchCardList.push(< FetchCard
+                    stockName={stockName}
+                    price={obj[stockName].stockPrice} />)
+            }
+        }
         let monitorCardList = []
         for (let stockName in this.state.monitoredStocks) {
-            monitorCardList.push(< Stockcard key={stockName} stockName={stockName} priceList={this.state.monitoredStocks[stockName]} />)
-        }
-        let fetchCardList = []
-        for (let stockName in this.state.monitoredStocks) {
-            console.log(stockName)
-            monitorCardList.push(< Stockcard key={stockName} stockName={stockName} priceList={this.state.monitoredStocks[stockName]} />)
+            monitorCardList.push(< MonitorCard
+                key={stockName}
+                stockName={stockName}
+                priceList={this.state.monitoredStocks[stockName]} />)
         }
         return (
             <div className="container">

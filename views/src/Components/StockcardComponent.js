@@ -9,8 +9,10 @@ class Stockcard extends React.Component {
         return (
             <div>
                 <h3>{this.props.stockName}</h3>
-                <span>{this.props.stockPrice}</span>
+                <ul>{this.props.priceList.map(price => <li>{price}</li>)}</ul>
             </div>
         )
     }
 }
+
+export default Stockcard

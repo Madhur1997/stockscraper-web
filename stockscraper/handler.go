@@ -58,6 +58,28 @@ func (*StockScraper) Monitor(req *stk.MonitorRequest, stream stk.Stockscraper_Mo
 	minTicker := time.NewTicker(time.Minute)
 	durationTicker := time.NewTicker(time.Minute * time.Duration(duration))
 
+	log.WithFields(log.Fields{
+		"Tick at": minTicker,
+	}).Debug("Fetch price")
+
+	result := make(chan string)
+	go FetchPrice(stock, result)
+
+	select {
+	case val := <-result:
+		if val != "" {
+			// Valid value received, send it to react client.
+			retVal, _ := strconv.ParseFloat(val, 64)
+			res := &stk.MonitorResponse{
+				Price: float32(retVal),
+			}
+			stream.Send(res)
+		} else {
+			// Error encountered, close stream and return the error.
+			return status.Errorf(codes.Internal, fmt.Sprintf("Internal error"))
+		}
+	}
+
 	for {
 		select {
 		case <-minTicker.C:

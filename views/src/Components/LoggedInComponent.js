@@ -1,35 +1,10 @@
 import React from "react"
 import { StockscraperClient } from "../stockscraper_grpc_web_pb"
 import { FetchRequest, MonitorRequest } from "../stockscraper_pb"
+import Stockcard from "./StockcardComponent"
 
 // Request to the envoy proxy
 var client = new StockscraperClient('http://localhost:3002')
-
-function fetchRequest(stockName) {
-    let request = new FetchRequest()
-    request.setName(stockName)
-
-    client.fetch(request, {}, (err, response) => {
-        console.log("Stock price: ", response.getPrice())
-    })
-}
-
-function monitorRequest(stockName, duration) {
-    let request = new MonitorRequest()
-    request.setName(stockName)
-    request.setDuration(duration)
-
-    let dl = new Date()
-    dl.setSeconds(dl.getSeconds() + 900)
-    let stream = client.monitor(request, { deadline: dl.getTime() })
-
-    stream.on('data', function (response) {
-        console.log("Stock price : ", response.getPrice())
-    })
-    stream.on('err', function (err) {
-        console.log(err)
-    })
-}
 
 class LoggedIn extends React.Component {
     constructor(props) {
@@ -37,10 +12,59 @@ class LoggedIn extends React.Component {
         this.state = {
             fetchInput: "",
             monitorInput: "",
+            monitoredStocks: {
+                "ashok leyland": [500]
+            },
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleKeyUp = this.handleKeyUp.bind(this)
+        this.fetchRequest = this.fetchRequest.bind(this)
+        this.monitorRequest = this.monitorRequest.bind(this)
+        this.streamOutput = this.streamOutput.bind(this)
     }
+
+    fetchRequest(stockName) {
+        let request = new FetchRequest()
+        request.setName(stockName)
+
+        client.fetch(request, {}, (err, response) => {
+            console.log("Stock name, price: ", stockName, response.getPrice())
+        })
+    }
+
+    streamOutput(stockName, price) {
+        console.log("Stock name, price : ", stockName, price)
+        let obj = this.state.monitoredStocks
+        for (let name in obj) {
+            console.log(name)
+        }
+        console.log(obj.hasOwnProperty(stockName))
+        if (obj.hasOwnProperty(stockName) == false) {
+            obj[stockName] = []
+        }
+        obj[stockName].push(price)
+        this.setState({
+            monitoredStocks: obj
+        })
+    }
+
+    monitorRequest(stockName, duration) {
+        let request = new MonitorRequest()
+        request.setName(stockName)
+        request.setDuration(duration)
+
+        let stream = client.monitor(request, {})
+        const fn = this.streamOutput
+
+        stream.on('data', function (response) {
+            let price = response.getPrice()
+            fn(stockName, price)
+        })
+        stream.on('error', function (err) {
+            console.log(err)
+        })
+    }
+
     logout = () => {
         localStorage.removeItem("id_token")
         localStorage.removeItem("access_token")
@@ -51,19 +75,17 @@ class LoggedIn extends React.Component {
     }
 
     handleKeyUp(event) {
-        console.log("Hello")
         const keyCode = event.keyCode
         const { name } = event.target
-        console.log(keyCode)
         // "13" is the Enter key
         if (keyCode === 13) {
             event.preventDefault()
             let stockName = this.state[name]
             console.log(stockName)
             if (name === "fetchInput") {
-                fetchRequest(stockName)
+                this.fetchRequest(stockName)
             } else {
-                monitorRequest(stockName, 60)
+                this.monitorRequest(stockName, 60)
             }
         }
     }
@@ -77,6 +99,15 @@ class LoggedIn extends React.Component {
     }
 
     render() {
+        let monitorCardList = []
+        for (let stockName in this.state.monitoredStocks) {
+            monitorCardList.push(< Stockcard key={stockName} stockName={stockName} priceList={this.state.monitoredStocks[stockName]} />)
+        }
+        let fetchCardList = []
+        for (let stockName in this.state.monitoredStocks) {
+            console.log(stockName)
+            monitorCardList.push(< Stockcard key={stockName} stockName={stockName} priceList={this.state.monitoredStocks[stockName]} />)
+        }
         return (
             <div className="container">
                 <div className="input-container">
@@ -100,7 +131,14 @@ class LoggedIn extends React.Component {
                             onKeyUp={this.handleKeyUp} />
                     </label>
                 </div>
-                <div className="stock-container"></div>
+                <div className="stock-container">
+                    <div className="fetch-container">
+                        {fetchCardList}
+                    </div>
+                    <div className="monitor-container">
+                        {monitorCardList}
+                    </div>
+                </div>
                 <div className="col-lg-12">
                     <br />
                     <span className="pull-right"> <button className="btn btn-default" onClick={this.logout}>Log Out</button></span>

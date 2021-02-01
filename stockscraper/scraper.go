@@ -26,7 +26,7 @@ func FetchPrice(q string, res chan<- string) {
 	ctx, cancel := chromedp.NewContext(context.Background())
 	defer cancel()
 	// Wait for timeout.
-	timeoutContext, _ := context.WithTimeout(ctx, 20*time.Second)
+	timeoutContext, _ := context.WithTimeout(ctx, 30*time.Second)
 
 	// run task list
 	var result string

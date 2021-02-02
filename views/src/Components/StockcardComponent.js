@@ -9,7 +9,7 @@ class MonitorCard extends React.Component {
         return (
             <div className="monitor-card">
                 <h3>{this.props.stockName}</h3>
-                <ul>{this.props.priceList.map(price => <li>Price: {price}</li>)}</ul>
+                <ul>{this.props.priceList.slice(0).reverse.map(price => <li>Price: &#8377;{price}</li>)}</ul>
             </div>
         )
     }
@@ -25,7 +25,7 @@ class FetchCard extends React.Component {
             <div className="fetch-card">
                 <h3>{this.props.stockName}</h3>
                 <ul>
-                    <li>Price: {this.props.price}</li>
+                    <li>Price: &#8377;{this.props.price}</li>
                 </ul>
             </div>
         )

@@ -1,5 +1,5 @@
 import Home from "./Components/HomeComponent.js"
-import LoggedIn from "./Components/LoggedInComponent.js"
+import LoggedIn from "./Components/LoggedInContainer.js"
 import { AUTH0_DOMAIN, AUTH0_CLIENT_ID } from "./authVars.js"
 
 class App extends React.Component {
